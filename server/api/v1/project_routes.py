@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Path
+from fastapi import APIRouter, Path, Query
 
 
 router = APIRouter(prefix='/projects')
@@ -14,7 +14,7 @@ router = APIRouter(prefix='/projects')
     },
     description='Retorna una lista pagina con los proyectos. Si no hay proyectos, retorna una lista vacia.'
 )  # GET /projects
-async def get_list() -> list:
+async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Annotated[int, Query(ge=1, le=1000)] = 0) -> list:
     return []
 
 
@@ -39,7 +39,8 @@ async def create() -> dict:
     },
     description='Devuelve un proyecto por ID. Falla si el ID no existe.'
 )  # GET BY ID /projects
-async def get_by_id(id: Annotated[int, Path(ge=1)]) -> dict: #con este Path Param valido datos en el endpoint y no en el servidor. Ahorra tiempo
+# con este Path Param valido datos en el endpoint y no en el servidor. Ahorra tiempo
+async def get_by_id(id: Annotated[int, Path(ge=1)]) -> dict:
     return {'id': id}
 
 
