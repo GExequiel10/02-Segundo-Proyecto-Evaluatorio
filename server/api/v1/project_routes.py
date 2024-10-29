@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from typing import Annotated
+from fastapi import APIRouter, Path
+
 
 router = APIRouter(prefix='/projects')
 
@@ -37,7 +39,7 @@ async def create() -> dict:
     },
     description='Devuelve un proyecto por ID. Falla si el ID no existe.'
 )  # GET BY ID /projects
-async def get_by_id(id: int) -> dict:
+async def get_by_id(id: Annotated[int, Path(ge=1)]) -> dict: #con este Path Param valido datos en el endpoint y no en el servidor. Ahorra tiempo
     return {'id': id}
 
 
@@ -50,7 +52,7 @@ async def get_by_id(id: int) -> dict:
     },
     description='Actualiza un proyecto con la data del Body Param. Falla si el ID no existe.'
 )  # PATCH /projects
-async def update(id: int) -> dict:
+async def update(id: Annotated[int, Path(ge=1)]) -> dict:
     return {'id': id}
 
 
@@ -63,5 +65,5 @@ async def update(id: int) -> dict:
     },
     description='Borra un proyecto a partir del ID pasado por Path Param. Falla si el ID no existe.'
 )  # DELETE /projects
-async def delete(id: int) -> None:
+async def delete(id: Annotated[int, Path(ge=1)]) -> None:
     return None
