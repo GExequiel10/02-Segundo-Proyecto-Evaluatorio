@@ -5,19 +5,19 @@ from pydantic import BaseModel
 class NewProjectRequest(BaseModel):
     title: str
     status: str = 'new'
-    descrption: str = ''  # Con las '' le damos un valor por defecto
+    description: str = ''  # Con las '' le damos un valor por defecto
 
 
 class ProjectRequest(BaseModel):
     title: str | None = None
     status: str | None = None
-    descrption: str | None = None
+    description: str | None = None
 
 
 class ProjectResponse(BaseModel):
     id: int
     title: str
     status: str = 'new'
-    descrption: str = ''
-    created_at: datetime
-    updated_at: datetime
+    description: str = ''
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
