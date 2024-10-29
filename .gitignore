@@ -1,0 +1,7 @@
+# Archivos pycache y entorno virtual
+
+venv/
+__pycache__/
+*.pyc
+
+*.pyo *.pyd *.db *.json
