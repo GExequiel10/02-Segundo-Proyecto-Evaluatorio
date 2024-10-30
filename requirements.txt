@@ -1,3 +1,5 @@
 # importar FastAPI
 fastapi==0.115.4
 uvicorn==0.32.0
+#Config
+pydantic-settings==2.6.0
