@@ -5,6 +5,9 @@ class Settings(BaseSettings):
     # API
     PORT: int = 8000
     DEV: bool = False
+    
+    # External DAta
+    PROJECTS_API: str
 
     # Logging
     DEBUG: bool = False

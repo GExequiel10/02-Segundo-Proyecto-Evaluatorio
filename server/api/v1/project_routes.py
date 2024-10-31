@@ -57,7 +57,7 @@ async def get_by_id(id: Annotated[int, Path(ge=1)]) -> ProjectResponse:
     '/{id}',  # path
     status_code=200,
     responses={
-        201: {'description': 'Proyecto actualizado'},
+        200: {'description': 'Proyecto actualizado'},
         404: NotFound.as_dict(),
         422: {'description': 'ID no es de tipo valido. Debe ser entero'},
     },
