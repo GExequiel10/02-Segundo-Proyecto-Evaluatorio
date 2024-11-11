@@ -8,7 +8,7 @@ from server.repository import ProjectsRepository
 class ProjectsService:
 
     def __init__(self):
-        self.project_repo = ProjectsRepository
+        self.project_repo = ProjectsRepository()
 
     def create(self, new_project: NewProjectRequest) -> ProjectResponse:
         project_dict = self.project_repo.create(new_project.model_dump())

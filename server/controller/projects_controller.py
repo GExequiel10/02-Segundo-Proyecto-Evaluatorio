@@ -20,8 +20,8 @@ class ProjectsController:
         except BaseHTTPException as ex:
             logger.error(f'Error al procesar request, status code {ex.status_code}: {ex.description}')
             self.__handler_http_exception(ex)
-        except Exception:
-            logger.critical(f'Error no contemplado en {__name__}.create()')
+        except Exception as ex:
+            logger.critical(f'Error no contemplado en {__name__}.create():' + str(ex))
             raise InternalServerError()
 
     # No definimos valores por defecto de limit y offset porque ya esta validado por la ruta
@@ -31,8 +31,8 @@ class ProjectsController:
         except BaseHTTPException as ex:
             #logger.error(f'Error al procesaar request, status code {ex.status_code}: {ex.description}') #
             self.__handler_http_exception(ex)
-        except Exception:
-            logger.critical(f'Error no contemplado en {__name__}.get_list()')
+        except Exception as ex:
+            logger.critical(f'Error no contemplado en {__name__}.get_list():' + str(ex))
             raise InternalServerError()
 
     def get_by_id(self, id: int) -> ProjectResponse:
@@ -42,8 +42,8 @@ class ProjectsController:
         except BaseHTTPException as ex:
             #logger.error(f'Error al procesaar request, status code {ex.status_code}: {ex.description}') #
             self.__handler_http_exception(ex)
-        except Exception:
-            logger.critical(f'Error no contemplado en {__name__}.get_by_id()')
+        except Exception as ex:
+            logger.critical(f'Error no contemplado en {__name__}.get_by_id():' + str(ex))
             raise InternalServerError()
 
     def update(self, id: int, new_data: ProjectRequest) -> ProjectResponse:
@@ -52,8 +52,8 @@ class ProjectsController:
         except BaseHTTPException as ex:
             #logger.error(f'Error al procesaar request, status code {ex.status_code}: {ex.description}') #
             self.__handler_http_exception(ex)
-        except Exception:
-            logger.critical(f'Error no contemplado en {__name__}.update()')
+        except Exception as ex:
+            logger.critical(f'Error no contemplado en {__name__}.update():' + str(ex))
             raise InternalServerError()
 
     def delete(self, id: int) -> None:
@@ -62,8 +62,8 @@ class ProjectsController:
         except BaseHTTPException as ex:
             #logger.error(f'Error al procesaar request, status code {ex.status_code}: {ex.description}') #
             self.__handler_http_exception(ex)
-        except Exception:
-            logger.critical(f'Error no contemplado en {__name__}.delete()')
+        except Exception as ex:
+            logger.critical(f'Error no contemplado en {__name__}.delete():' + str(ex))
             raise InternalServerError()
 
     def __handler_http_exception(self, ex: BaseHTTPException):
