@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 class ProductsApi:
     def __init__(self) -> None:
         self.client = requests.Session()
-        self.base_url = app_settings.PROJECTS_API
+        self.base_url = app_settings.PRODUCTS_API
+
         
     def get_list(self, limit:int, offset:int):
         url = self.base_url + '/products'
@@ -21,4 +22,3 @@ class ProductsApi:
         logger.info(f'[GET]{response.url}:{response.status_code}')
        
         return response.json()
-    

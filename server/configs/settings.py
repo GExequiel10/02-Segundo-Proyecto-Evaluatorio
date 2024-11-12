@@ -7,7 +7,10 @@ class Settings(BaseSettings):
     DEV: bool = False
     
     # External DAta
-    PROJECTS_API: str #TODO
+    PRODUCTS_API: str
+    
+    #Database
+    DB_CONN: str
 
     # Logging
     DEBUG: bool = False
