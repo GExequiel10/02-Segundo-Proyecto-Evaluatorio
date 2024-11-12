@@ -1,7 +1,9 @@
+#Aca usamos herencia
 from fastapi import HTTPException
 
 
 class BaseHTTPException(HTTPException):
+    #Atributos de clase
     description: str
     status_code: int
     

@@ -1,1 +1,1 @@
-from .project_service import ProjectsService
+from .product_service import ProductsService

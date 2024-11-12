@@ -6,13 +6,13 @@ from server.configs import app_settings
 
 logger = logging.getLogger(__name__)
 
-class ProjectsApi:
+class ProductsApi:
     def __init__(self) -> None:
         self.client = requests.Session()
         self.base_url = app_settings.PROJECTS_API
         
     def get_list(self, limit:int, offset:int):
-        url = self.base_url + '/projects'
+        url = self.base_url + '/products'
         params = {
             'limit': limit,
             'offset': offset,

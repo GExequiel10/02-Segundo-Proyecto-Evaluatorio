@@ -2,16 +2,15 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Path, Query
 
-from server.schemas.project_schemas import NewProjectRequest, ProjectResponse, ProjectRequest #TODO
-from server.controller import ProjectsController #TODO
+from server.schemas.product_schemas import NewProductRequest, ProductResponse, ProductRequest
+from server.controller import ProductsController
 from server.exceptions import InternalServerError, NotFound
 
 router = APIRouter(prefix='/products')
 router.responses = {
     500: InternalServerError.as_dict(),
 }
-controller = ProjectsController() #TODO
-
+controller = ProductsController()
 
 
 @router.post(
@@ -22,9 +21,9 @@ controller = ProjectsController() #TODO
     },
     description='Crea un producto nuevo pasado por Body Param. Falla si falta alguno de los campos obligatorios.'
 )  # POST /projects
-async def create(new_project: NewProjectRequest) -> ProjectResponse: #TODO
+async def create(new_product: NewProductRequest) -> ProductResponse:
     # esto seria todo el codigo: retornar la funcion que le corresponde al controlador pasandole un parametro
-    return controller.create(new_project) #TODO
+    return controller.create(new_product)
 
 
 @router.get(
@@ -35,7 +34,7 @@ async def create(new_project: NewProjectRequest) -> ProjectResponse: #TODO
     },
     description='Retorna una lista paginada con los productos del negocio. Si no hay productos para mostrar, retorna una lista vacia.'
 )  # GET /projects
-async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Annotated[int, Query(ge=0)] = 0) -> List[ProjectResponse]: #TODO
+async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Annotated[int, Query(ge=0)] = 0) -> List[ProductResponse]:
     return controller.get_list(limit, offset)
 
 
@@ -50,7 +49,7 @@ async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Ann
     description='Retorna un producto por ID. Falla si el ID no existe.'
 )  # GET BY ID /projects
 # con este Path Param valido datos en el endpoint y no en el servidor. Ahorra tiempo
-async def get_by_id(id: Annotated[int, Path(ge=1)]) -> ProjectResponse: #TODO
+async def get_by_id(id: Annotated[int, Path(ge=1)]) -> ProductResponse:
     return controller.get_by_id(id)
 
 
@@ -64,8 +63,8 @@ async def get_by_id(id: Annotated[int, Path(ge=1)]) -> ProjectResponse: #TODO
     },
     description='Actualiza un producto con la data del Body Param. Falla si el ID no existe.'
 )  # PATCH /projects
-async def update(id: Annotated[int, Path(ge=1)], project: ProjectRequest) -> ProjectResponse: #TODO
-    return controller.update(id, project) #TODO
+async def update(id: Annotated[int, Path(ge=1)], product: ProductRequest) -> ProductResponse:
+    return controller.update(id, product)
 
 
 @router.delete(

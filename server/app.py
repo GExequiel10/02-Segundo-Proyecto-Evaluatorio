@@ -8,10 +8,12 @@ from .api import api_router
 # logger = logging.getLogger(__name__)
 fast_products = FastAPI(title='Product Store API')
 
-#Redirigir la raiz (/) a la documentacion (/docs)
+# Redirigir la raiz (/) a la documentacion (/docs)
+
+
 @fast_products.get('/', include_in_schema=False)
 async def root():
-    return RedirectResponse (url='/docs')
+    return RedirectResponse(url='/docs')
 
 # incluimos el router principal a la instancia de FastAPI
 # es bueno arrancar a definir las rutas 'desde la hoja del arbol'

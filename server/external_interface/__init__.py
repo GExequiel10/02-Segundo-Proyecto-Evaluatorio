@@ -1,3 +1,3 @@
-from .projects_api import ProjectsApi
+from .products_api import ProductsApi
 
-projects_api_client = ProjectsApi()
+projects_api_client = ProductsApi()

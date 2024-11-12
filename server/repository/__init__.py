@@ -1,1 +1,1 @@
-from server.repository.projects_repository import ProjectsRepository
+from server.repository.products_repository import ProductsRepository

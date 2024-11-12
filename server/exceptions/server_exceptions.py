@@ -1,4 +1,4 @@
-from .base_http_exceptions import BaseHTTPException
+from .base_http_exception import BaseHTTPException
 
 
 class InternalServerError(BaseHTTPException):
