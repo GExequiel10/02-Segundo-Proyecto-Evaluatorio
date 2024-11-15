@@ -10,3 +10,4 @@ class ProductModel(BaseModel):
     brand: Mapped[str] = mapped_column(String(50), nullable=False)
     stock: Mapped[int] = mapped_column(Integer, nullable=False)
     description: Mapped[str] = mapped_column(String(500), nullable=False)
+    price: Mapped[int] = mapped_column(Integer, default='1', nullable=False)

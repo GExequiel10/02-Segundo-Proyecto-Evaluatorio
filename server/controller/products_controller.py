@@ -15,7 +15,8 @@ class ProductsController:
 
     def create(self, new_product: NewProductRequest) -> ProductResponse:
         try:
-            logger.debug(f'Crear producto {new_product.name} {new_product.brand}')
+            logger.debug(
+                f'Crear producto {new_product.name} {new_product.brand}')
             return self.service.create(new_product)
         except BaseHTTPException as ex:
             logger.error(

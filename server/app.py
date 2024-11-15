@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from .api import api_router
-from .database import db_connection,create_tables
+from .database import db_connection
 
 # logger = logging.getLogger(__name__)
 fast_products = FastAPI(title='Product Store API')
@@ -19,8 +19,10 @@ fast_products.include_router(api_router)
 
 @fast_products.on_event('startup')
 async def startup_event():
-    if db_connection.connect():
-        create_tables()
+    # if db_connection.connect():
+    #     create_tables()
+    db_connection.connect()
+        
 
 @fast_products.on_event('shutdown')
 def shutdown_event():
