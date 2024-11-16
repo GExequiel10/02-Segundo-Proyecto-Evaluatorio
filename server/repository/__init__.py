@@ -1,1 +1,2 @@
 from server.repository.products_repository import ProductsRepository
+from server.repository.users_repository import UsersRepository
