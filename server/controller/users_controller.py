@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from server.schemas.user_schemas import NewUserRequest, UserRequest, UserResponse
-from server.exceptions import BaseHTTPException, InternalServerError
+from server.exceptions import BaseHTTPException, InternalServerError, UniqFieldException, BadRequest
 from server.service import UsersService
 
 
@@ -22,10 +22,13 @@ class UsersController:
             logger.error(
                 f'Error al procesar request, status code {ex.status_code}: {ex.description}')
             self.__handler_http_exception(ex)
+        except UniqFieldException as ex:
+            logger.error(str(ex))
+            raise BadRequest('Ya existe un usuario registrado con el mismo "username" o "email".')
         except Exception as ex:
             logger.critical(
                 f'Error no contemplado en {__name__}.create():' + str(ex))
-            raise InternalServerError()
+            raise InternalServerError(str(ex))
 
 
     def get_list(self, limit: int, offset: int) -> List[UserResponse]:
@@ -46,7 +49,7 @@ class UsersController:
             self.__handler_http_exception(ex)
         except Exception as ex:
             logger.critical(
-                f'Error no contemplado en {__name__}.get_by_id():' + str(ex))
+                f'Error no contemplado en {__name__}.get_by_id()')
             raise InternalServerError()
 
     def update(self, id: int, new_data: UserRequest) -> UserResponse:
@@ -54,9 +57,9 @@ class UsersController:
             return self.service.update(id, new_data)
         except BaseHTTPException as ex:
             self.__handler_http_exception(ex)
-        except Exception as ex:
+        except Exception:
             logger.critical(
-                f'Error no contemplado en {__name__}.update():' + str(ex))
+                f'Error no contemplado en {__name__}.update()')
             raise InternalServerError()
 
     def delete(self, id: int) -> None:
@@ -66,7 +69,7 @@ class UsersController:
             self.__handler_http_exception(ex)
         except Exception as ex:
             logger.critical(
-                f'Error no contemplado en {__name__}.delete():' + str(ex))
+                f'Error no contemplado en {__name__}.delete()')
             raise InternalServerError()
 
     def __handler_http_exception(self, ex: BaseHTTPException):

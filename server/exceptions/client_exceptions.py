@@ -8,3 +8,11 @@ class BadRequest(BaseHTTPException):
 class NotFound(BaseHTTPException):
     description = 'Recurso no encontrado'
     status_code = 404
+    
+class Unauthorized(BaseException):
+    description = 'El usuario debe estar logeado'
+    status_code = 401
+    
+class Forbidden(BaseException):
+    description = 'El usuario no tiene acceso a este recurso'
+    status_code = 403

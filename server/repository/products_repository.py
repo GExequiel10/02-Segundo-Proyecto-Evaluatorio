@@ -12,25 +12,31 @@ class ProductsRepository:
         self.db.add(new_product)
         self.db.commit()
         self.db.refresh(new_product)
-        return self.__to_dict(new_product)
+        return new_product.to_dict()
 
-    def get_list(self, limit: int, offset: int) -> list[dict]:
-        products = self.db.query(ProductModel).order_by('id').limit(limit).offset(offset).all()
-        return [self.__to_dict(product) for product in products]
+    def get_list(self, limit: int, offset: int, user_id: int) -> list[dict]:
+        products = (self.db.query(ProductModel).order_by('id').filter_by(user_id=user_id).limit(limit).offset(offset).all())
+        return [product.to_dict() for product in products]
         
     def get_by_id(self, product_id: int) -> dict | None:
         product = self.__get_one(product_id)
-        if product is None: return
-        return self.__to_dict(product)
-
+        if product is None: 
+            return None
+        return product.to_dict()
+    
+    
     def update(self, id: int, new_data: dict) -> dict | None:
         product = self.__get_one(id)
-        if product is None: return
+        if product is None: 
+            return None
         for field in new_data.keys():
             setattr(product, field, new_data[field])
+        # for field, value in new_data.items():
+        #     if hasattr(product, field): # para validar
+        #         setattr(product, field, value)
         self.db.commit()
         self.db.refresh(product)
-        return self.__to_dict(product)
+        return product.to_dict()
 
     def delete(self, id: int) -> bool:
         product = self.__get_one(id)
@@ -41,9 +47,3 @@ class ProductsRepository:
 
     def __get_one(self, product_id:int) -> ProductModel | None:
         return self.db.query(ProductModel).filter_by(id=product_id).first()
-
-    def __to_dict(self, product: ProductModel) -> dict:
-        return{
-            column.name: getattr(product, column.name)
-            for column in ProductModel.__table__.columns
-        }

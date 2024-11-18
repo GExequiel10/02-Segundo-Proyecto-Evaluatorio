@@ -1,10 +1,14 @@
 from typing import Annotated, List
 
-from fastapi import APIRouter, Path, Query
+from fastapi import APIRouter, Path, Query, Depends
+
 
 from server.schemas.product_schemas import NewProductRequest, ProductResponse, ProductRequest
 from server.controller import ProductsController
 from server.exceptions import InternalServerError, NotFound
+from server.schemas.auth_schemas import DecodedJwt
+from server.dependencies import has_permission #TODO
+from server.enums import ALL_ROLLES
 
 router = APIRouter(prefix='/products')
 router.responses = {
@@ -20,10 +24,11 @@ controller = ProductsController()
         201: {'description': 'Producto creado'},
     },
     description='Crea un producto nuevo pasado por Body Param. Falla si falta alguno de los campos obligatorios.'
-)  # POST /projects
-async def create(new_product: NewProductRequest) -> ProductResponse:
-    # esto seria todo el codigo: retornar la funcion que le corresponde al controlador pasandole un parametro
-    return controller.create(new_product)
+)  # POST /products
+async def create(new_product: NewProductRequest,
+                 token: DecodedJwt = Depends(has_permission(ALL_ROLLES)),
+                 ) -> ProductResponse:
+    return controller.create(new_product, token.user_id)
 
 
 @router.get(
@@ -33,9 +38,13 @@ async def create(new_product: NewProductRequest) -> ProductResponse:
         200: {'description': 'Listado de productos'},
     },
     description='Retorna una lista paginada con los productos del negocio. Si no hay productos para mostrar, retorna una lista vacia.'
-)  # GET /projects
-async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Annotated[int, Query(ge=0)] = 0) -> List[ProductResponse]:
-    return controller.get_list(limit, offset)
+)  # GET /products
+async def get_list(
+    limit: Annotated[int, Query(ge=1, le=1000)] = 10,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    token: DecodedJwt = Depends(has_permission(ALL_ROLLES)),
+    ) -> List[ProductResponse]:
+    return controller.get_list(limit, offset, token.user_id)
 
 
 @router.get(
@@ -47,10 +56,13 @@ async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Ann
         422: {'description': 'ID no es de tipo valido. Debe ser entero'},
     },
     description='Retorna un producto por ID. Falla si el ID no existe.'
-)  # GET BY ID /projects
+)  # GET BY ID /products/{id}
 # con este Path Param valido datos en el endpoint y no en el servidor. Ahorra tiempo
-async def get_by_id(id: Annotated[int, Path(ge=1)]) -> ProductResponse:
-    return controller.get_by_id(id)
+async def get_by_id(
+    id: Annotated[int, Path(ge=1)],
+    token: DecodedJwt = (has_permission(ALL_ROLLES)),
+    ) -> ProductResponse:
+    return controller.get_by_id(id, token)
 
 
 @router.patch(
@@ -62,9 +74,13 @@ async def get_by_id(id: Annotated[int, Path(ge=1)]) -> ProductResponse:
         422: {'description': 'ID no es de tipo valido. Debe ser entero'},
     },
     description='Actualiza un producto con la data del Body Param. Falla si el ID no existe.'
-)  # PATCH /projects
-async def update(id: Annotated[int, Path(ge=1)], product: ProductRequest) -> ProductResponse:
-    return controller.update(id, product)
+)  # PATCH /products
+async def update(
+    id: Annotated[int, Path(ge=1)],
+    product: ProductRequest,
+    token: DecodedJwt = Depends(has_permission(ALL_ROLLES)),
+    ) -> ProductResponse:
+    return controller.update(id, product, token)
 
 
 @router.delete(
@@ -76,6 +92,9 @@ async def update(id: Annotated[int, Path(ge=1)], product: ProductRequest) -> Pro
         422: {'description': 'ID no es de tipo valido. Debe ser entero'},
     },
     description='Borra un producto a partir del ID pasado por Path Param. Falla si el ID no existe.'
-)  # DELETE /projects
-async def delete(id: Annotated[int, Path(ge=1)]) -> None:
-    controller.delete(id)
+)  # DELETE /products
+async def delete(
+    id: Annotated[int, Path(ge=1)],
+    token: DecodedJwt = Depends(has_permission(ALL_ROLLES)),
+    ) -> None:
+    controller.delete(id, token)

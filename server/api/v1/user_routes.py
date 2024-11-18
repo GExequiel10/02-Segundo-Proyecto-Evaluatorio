@@ -1,10 +1,14 @@
 from typing import Annotated, List
 
-from fastapi import APIRouter, Path, Query
+from fastapi import APIRouter, Path, Query, Depends
 
 from server.schemas.user_schemas import NewUserRequest, UserResponse, UserRequest
 from server.controller import UsersController
 from server.exceptions import InternalServerError, NotFound
+from server.schemas.auth_schemas import DecodedJwt
+from server.dependencies import has_permission
+from server.enums import ADMIN_ROLES
+
 
 router = APIRouter(prefix='/users')
 router.responses = {
@@ -21,7 +25,10 @@ controller = UsersController()
     },
     description='Crea un usuario nuevo pasado por Body Param. Falla si falta alguno de los campos obligatorios.'
 )  # POST /users
-async def create(new_user: NewUserRequest) -> UserResponse:
+async def create(
+    new_user: NewUserRequest,
+    _: DecodedJwt = Depends(has_permission(ADMIN_ROLES)),
+    ) -> UserResponse:
     return controller.create(new_user)
 
 
@@ -33,7 +40,11 @@ async def create(new_user: NewUserRequest) -> UserResponse:
     },
     description='Retorna una lista paginada con los usuarios del negocio. Si no hay usuario para mostrar, retorna una lista vacia.'
 )  # GET /users
-async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Annotated[int, Query(ge=0)] = 0) -> List[UserResponse]:
+async def get_list(
+    limit: Annotated[int, Query(ge=1, le=1000)] = 10,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    _: DecodedJwt = Depends(has_permission(ADMIN_ROLES)),
+    ) -> List[UserResponse]:
     return controller.get_list(limit, offset)
 
 
@@ -47,7 +58,10 @@ async def get_list(limit: Annotated[int, Query(ge=1, le=1000)] = 10, offset: Ann
     },
     description='Retorna un usuario por ID. Falla si el ID no existe.'
 )  # GET BY ID /users
-async def get_by_id(id: Annotated[int, Path(ge=1)]) -> UserResponse:
+async def get_by_id(
+    id: Annotated[int, Path(ge=1)],
+    _: DecodedJwt = Depends(has_permission(ADMIN_ROLES)),
+    ) -> UserResponse:
     return controller.get_by_id(id)
 
 
@@ -61,7 +75,11 @@ async def get_by_id(id: Annotated[int, Path(ge=1)]) -> UserResponse:
     },
     description='Actualiza la informacion de un usuario con la data del Body Param. Falla si el ID no existe.'
 )  # PATCH /users
-async def update(id: Annotated[int, Path(ge=1)], user: UserRequest) -> UserResponse:
+async def update(
+    id: Annotated[int, Path(ge=1)],
+    user: UserRequest,
+    _: DecodedJwt = Depends(has_permission(ADMIN_ROLES)),
+    ) -> UserResponse:
     return controller.update(id, user)
 
 
@@ -75,5 +93,8 @@ async def update(id: Annotated[int, Path(ge=1)], user: UserRequest) -> UserRespo
     },
     description='Elimina un usuario a partir del ID pasado por Path Param. Falla si el ID no existe.'
 )  # DELETE /users
-async def delete(id: Annotated[int, Path(ge=1)]) -> None:
+async def delete(
+    id: Annotated[int, Path(ge=1)],
+    _: DecodedJwt = Depends(has_permission(ADMIN_ROLES)),
+    ) -> None:
     controller.delete(id)
