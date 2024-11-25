@@ -2,16 +2,24 @@
 
 from fastapi import FastAPI
 from fastapi.middleware import Middleware
-#from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from .api import api_router
 from .database import db_connection
-#from .configs import api_description #TODO
-from .middlewares import RequestLoggingMiddleware
+from .middlewares import RequestLoggingMiddleware, JwtMiddleware
 
 api_middlewares = [
-    Middleware(RequestLoggingMiddleware)
+    Middleware(
+        CORSMiddleware,
+        allow_origins=['*'],
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*'],
+        expose_headers=['renewed-token']
+        ),
+    Middleware(JwtMiddleware),
+    Middleware(RequestLoggingMiddleware),
 ]
 
 # logger = logging.getLogger(__name__)

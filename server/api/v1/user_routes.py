@@ -7,7 +7,7 @@ from server.controller import UsersController
 from server.exceptions import InternalServerError, NotFound
 from server.schemas.auth_schemas import DecodedJwt
 from server.dependencies import has_permission
-from server.enums import ADMIN_ROLES
+from server.enums import ADMIN_ROLES, ALL_ROLLES
 
 
 router = APIRouter(prefix='/users')
@@ -43,7 +43,7 @@ async def create(
 async def get_list(
     limit: Annotated[int, Query(ge=1, le=1000)] = 10,
     offset: Annotated[int, Query(ge=0)] = 0,
-    _: DecodedJwt = Depends(has_permission(ADMIN_ROLES)),
+    _: DecodedJwt = Depends(has_permission(ALL_ROLLES))
     ) -> List[UserResponse]:
     return controller.get_list(limit, offset)
 

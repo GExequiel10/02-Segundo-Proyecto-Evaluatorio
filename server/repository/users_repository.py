@@ -1,4 +1,5 @@
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import text
 
 from server.database import db_connection
 from server.database.models import UserModel
@@ -25,7 +26,7 @@ class UsersRepository:
         return new_user.to_dict()
 
     def get_list(self, limit: int, offset: int) -> list[dict]:
-        users = (self.db.query(UserModel).order_by('id').limit(limit).offset(offset).all())
+        users = self.db.query(UserModel).order_by(UserModel.id).limit(limit).offset(offset).all()
         return [user.to_dict() for user in users]
         
     def get_by_id(self, user_id: int) -> dict | None:

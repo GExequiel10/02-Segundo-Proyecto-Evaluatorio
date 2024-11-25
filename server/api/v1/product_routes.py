@@ -7,7 +7,7 @@ from server.schemas.product_schemas import NewProductRequest, ProductResponse, P
 from server.controller import ProductsController
 from server.exceptions import InternalServerError, NotFound
 from server.schemas.auth_schemas import DecodedJwt
-from server.dependencies import has_permission #TODO
+from server.dependencies import has_permission
 from server.enums import ALL_ROLLES
 
 router = APIRouter(prefix='/products')
@@ -60,7 +60,7 @@ async def get_list(
 # con este Path Param valido datos en el endpoint y no en el servidor. Ahorra tiempo
 async def get_by_id(
     id: Annotated[int, Path(ge=1)],
-    token: DecodedJwt = (has_permission(ALL_ROLLES)),
+    token: DecodedJwt = Depends(has_permission(ALL_ROLLES)),
     ) -> ProductResponse:
     return controller.get_by_id(id, token)
 

@@ -21,7 +21,7 @@ class ProductsRepository:
         return new_product.to_dict()
 
     def get_list(self, limit: int, offset: int, user_id: int) -> list[dict]:
-        products = (self.db.query(ProductModel).order_by(text('id')).filter_by(user_id=user_id).limit(limit).offset(offset).all())
+        products = (self.db.query(ProductModel).order_by(ProductModel.id).filter_by(user_id=user_id).limit(limit).offset(offset).all())
         return [product.to_dict() for product in products]
         # query = (
         #     self.db.query(ProductModel)
@@ -62,4 +62,9 @@ class ProductsRepository:
         return True
 
     def __get_one(self, product_id:int) -> ProductModel | None:
-        return self.db.query(ProductModel).filter_by(id=product_id).first()
+        # return self.db.query(ProductModel).filter_by(id=product_id).first()
+        product = self.db.query(ProductModel).filter_by(id=product_id).first()
+        logger.debug(f"Producto obtenido en __get_one: {product}")
+        return product
+
+

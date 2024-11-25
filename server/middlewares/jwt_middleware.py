@@ -17,7 +17,7 @@ class JwtMiddleware(BaseHTTPMiddleware):
         
         response = await call_next(request)
         
-        if token is None or not token.startswitch('Bearer'):
+        if token is None or not token.startswith('Bearer'):
             return response
         try:
             payload = jwt_handler.decode(token.split(' ')[1])
