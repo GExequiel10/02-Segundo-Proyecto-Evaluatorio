@@ -8,6 +8,6 @@ from .auth_routes import router as auth_router
 router_v1 = APIRouter(prefix='/v1')
 
 #Agregamos al router las rutas definidas
+router_v1.include_router(auth_router, tags=['Auth'])
 router_v1.include_router(product_router, tags=['Products'])
 router_v1.include_router(user_router, tags=['Users'])
-router_v1.include_router(auth_router, tags=['Auth'])

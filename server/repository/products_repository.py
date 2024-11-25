@@ -1,6 +1,12 @@
+
+import logging
+from sqlalchemy import text
+
 from server.database import db_connection
 from server.database.models import ProductModel
 
+
+logger = logging.getLogger(__name__)
 
 class ProductsRepository:
     
@@ -15,7 +21,17 @@ class ProductsRepository:
         return new_product.to_dict()
 
     def get_list(self, limit: int, offset: int, user_id: int) -> list[dict]:
-        products = (self.db.query(ProductModel).order_by('id').filter_by(user_id=user_id).limit(limit).offset(offset).all())
+        # products = (self.db.query(ProductModel).order_by(text('id')).filter_by(user_id=user_id).limit(limit).offset(offset).all())
+        # return [product.to_dict() for product in products]
+        query = (
+            self.db.query(ProductModel)
+            .order_by(text('id'))
+            .filter_by(user_id=user_id)
+            .limit(limit)
+            .offset(offset)
+            )
+        logger.debug(f'Query ejecutada:{query}')
+        products = query.all()
         return [product.to_dict() for product in products]
         
     def get_by_id(self, product_id: int) -> dict | None:
