@@ -1,5 +1,6 @@
 import logging
 import json
+import time
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
@@ -17,9 +18,16 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         body_param = await request.body()
         body_param = self.__hide_sensitive_fields(body_param)
         
+        start_time = time.time()
+        
         response = await call_next(request)
         
-        info_data = f'{client_ip} - "{method} {url} {query_params}" {response.status_code}'
+        end_time = time.time()
+        elapsed_time_ms = (end_time - start_time) * 1000
+        
+        info_data = (f'{client_ip} - "{method} {url} {query_params}" {response.status_code}'
+                     f' in {elapsed_time_ms:.2f} ms'
+                     )
         if body_param:
             info_data += f'\nBODY: {str(body_param)}'
         request_logger.info(info_data)

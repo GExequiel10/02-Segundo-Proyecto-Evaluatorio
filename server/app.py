@@ -1,18 +1,21 @@
 # import logging
 
 from fastapi import FastAPI
-#from fastapi.middleware import Middleware
+from fastapi.middleware import Middleware
 #from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from .api import api_router
 from .database import db_connection
 #from .configs import api_description #TODO
-#from .middlewares import RequestLoggingMiddleware, JwtMiddleware
+from .middlewares import RequestLoggingMiddleware
 
+api_middlewares = [
+    Middleware(RequestLoggingMiddleware)
+]
 
 # logger = logging.getLogger(__name__)
-fast_products = FastAPI(title='Product Store API')
+fast_products = FastAPI(middleware=api_middlewares, title='Product Store API')
 
 # Redirigir la raiz (/) a la documentacion (/docs)
 @fast_products.get('/', include_in_schema=False)
